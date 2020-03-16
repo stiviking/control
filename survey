@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Redirecting to the Survey ...</title>
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+
+<body id="home">
+  <img src="PreviewQuestionnaire.png" />
+  <script>
+    let survey_url = 'https://www.unipark.de/uc/robot_capabilities/'
+    let plain_url = 'https://firefoxmetzger.github.io/robot_capabilities_glue/'
+    let mturk_url = 'https://www.mturk.com/mturk/externalSubmit'
+    // let mturk_url = 'https://workersandbox.mturk.com/mturk/externalSubmit'
+    
+    if (RegExp("returnToMTurk").test(window.location.href)) {
+      console.log(window.location.href);
+      var match = RegExp("assignmentId=(.*?)&").exec(window.location.href);
+      var attention_response = RegExp("attentionCheckPassed=(.*?)&").exec(window.location.href);
+	    var form = document.createElement('form');
+      document.body.appendChild(form);
+      form.method = 'post';
+      form.action = mturk_url + '?assignmentId=' + match[1] + '&attentionCheckPassed=' + attention_response[1];
+	    console.log(form.action)
+      form.submit();
+    } else if (RegExp("ASSIGNMENT_ID_NOT_AVAILABLE").test(window.location.href)) {
+      // do nothing
+    } else {
+      let url = window.location.href;
+      url = url.replace('assignmentId','a');
+      url = url.replace('hitId','b');
+      url = url.replace('turkSubmitTo','c');
+      url = url.replace('workerId','d');
+      url = url.replace(plain_url,survey_url);
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>
